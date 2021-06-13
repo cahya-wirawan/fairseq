@@ -24,8 +24,9 @@ from torch import nn
 
 def read_audio(fname):
     """ Load an audio file and return PCM along with the sample rate """
+    import librosa
 
-    wav, sr = sf.read(fname)
+    wav, sr = librosa.load(fname, sr=16000)
     assert sr == 16e3
 
     return wav, 16e3

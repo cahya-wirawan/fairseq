@@ -92,7 +92,9 @@ class Wav2VecFeatureReader(object):
 
     def read_audio(self, fname):
         """Load an audio file and return PCM along with the sample rate"""
-        wav, sr = sf.read(fname)
+        import librosa
+
+        wav, sr = librosa.load(fname, sr=16000)
         assert sr == 16e3
 
         return wav

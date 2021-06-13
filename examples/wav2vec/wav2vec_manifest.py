@@ -12,7 +12,7 @@ import glob
 import os
 import random
 
-import soundfile
+import librosa
 
 
 def get_parser():
@@ -66,13 +66,18 @@ def main(args):
         if valid_f is not None:
             print(dir_path, file=valid_f)
 
+        counter = 0
         for fname in glob.iglob(search_path, recursive=True):
+            if counter % 100 == 0:
+                print(counter)
+            counter += 1
             file_path = os.path.realpath(fname)
 
             if args.path_must_contain and args.path_must_contain not in file_path:
                 continue
 
-            frames = soundfile.info(fname).frames
+            data, sampling_rate = librosa.load(fname, sr=16000)
+            frames = len(data)
             dest = train_f if rand.random() > args.valid_percent else valid_f
             print(
                 "{}\t{}".format(os.path.relpath(file_path, dir_path), frames), file=dest

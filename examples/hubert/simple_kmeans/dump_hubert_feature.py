@@ -39,7 +39,9 @@ class HubertFeatureReader(object):
         logger.info(f" max_chunk = {self.max_chunk}")
 
     def read_audio(self, path, ref_len=None):
-        wav, sr = sf.read(path)
+        import librosa
+
+        wav, sr = librosa.load(path, sr=16000)
         assert sr == self.task.cfg.sample_rate, sr
         if wav.ndim == 2:
             wav = wav.mean(-1)

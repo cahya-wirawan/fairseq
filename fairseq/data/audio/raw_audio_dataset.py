@@ -13,6 +13,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+import librosa
+
 from .. import FairseqDataset
 from ..data_utils import compute_mask_indices, get_buckets, get_bucketed_sizes
 from fairseq.data.audio.audio_utils import (
@@ -303,7 +305,6 @@ class FileAudioDataset(RawAudioDataset):
         self.set_bucket_info(num_buckets)
 
     def __getitem__(self, index):
-        import soundfile as sf
 
         path_or_fp = os.path.join(self.root_dir, str(self.fnames[index]))
         _path, slice_ptr = parse_path(path_or_fp)
@@ -312,7 +313,7 @@ class FileAudioDataset(RawAudioDataset):
             assert is_sf_audio_data(byte_data)
             path_or_fp = io.BytesIO(byte_data)
 
-        wav, curr_sample_rate = sf.read(path_or_fp, dtype="float32")
+        wav, curr_sample_rate = librosa.load(path_or_fp, sr=16000)
 
         feats = torch.from_numpy(wav).float()
         feats = self.postprocess(feats, curr_sample_rate)
@@ -374,13 +375,13 @@ class BinarizedAudioDataset(RawAudioDataset):
         logger.info(f"loaded {len(self.fnames)} samples")
 
     def __getitem__(self, index):
-        import soundfile as sf
+        import librosa
 
         fname = self.fnames_dict.string(self.fnames[index], separator="")
         if self.root_dir:
             fname = os.path.join(self.root_dir, fname)
 
-        wav, curr_sample_rate = sf.read(fname)
+        wav, curr_sample_rate = librosa.load(fname, sr=16000)
         feats = torch.from_numpy(wav).float()
         feats = self.postprocess(feats, curr_sample_rate)
         return {"id": index, "source": feats}

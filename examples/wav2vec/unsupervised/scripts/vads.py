@@ -13,7 +13,7 @@ from scipy.signal import lfilter
 
 import numpy as np
 from tqdm import tqdm
-import soundfile as sf
+import librosa
 import os.path as osp
 
 
@@ -23,7 +23,7 @@ def rvad(path):
     vadThres = 0.4
     opts = 1
 
-    data, fs = sf.read(path)
+    data, fs = librosa.load(path, sr=16000)
     assert fs == 16_000, "sample rate must be 16khz"
     ft, flen, fsh10, nfr10 = speechproc.sflux(data, fs, winlen, ovrlen, nftt)
 

@@ -28,7 +28,9 @@ class MfccFeatureReader(object):
         self.sample_rate = sample_rate
 
     def read_audio(self, path, ref_len=None):
-        wav, sr = sf.read(path)
+        import librosa
+
+        wav, sr = librosa.load(path, sr=16000)
         assert sr == self.sample_rate, sr
         if wav.ndim == 2:
             wav = wav.mean(-1)

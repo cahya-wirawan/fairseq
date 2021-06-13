@@ -40,9 +40,10 @@ class FilesDataset:
         return len(self.files)
 
     def __getitem__(self, index):
-        fname = self.files[index]
+        import librosa
 
-        wav, sr = sf.read(fname)
+        fname = self.files[index]
+        wav, sr = librosa.load(fname, sr=16000)
         assert sr == 16000
 
         wav = torch.from_numpy(wav).float()

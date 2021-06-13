@@ -54,12 +54,13 @@ def get_waveform(
             raise ValueError(f"Unsupported audio format: {ext}")
 
     try:
-        import soundfile as sf
+        import librosa
     except ImportError:
         raise ImportError(
-            "Please install soundfile to load WAV/FLAC/OGG Vorbis audios"
+            "Please install librosa to load WAV/FLAC/OGG Vorbis audios"
         )
-
+    waveform, sample_rate = librosa.load(path_or_fp)
+    """
     waveform, sample_rate = sf.read(
         path_or_fp, dtype="float32", always_2d=True, frames=frames, start=start
     )
@@ -70,6 +71,7 @@ def get_waveform(
         waveform *= 2 ** 15  # denormalized to 16-bit signed integers
     if not always_2d:
         waveform = waveform.squeeze(axis=0)
+    """
     return waveform, sample_rate
 
 
