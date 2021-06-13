@@ -59,7 +59,7 @@ def get_waveform(
         raise ImportError(
             "Please install librosa to load WAV/FLAC/OGG Vorbis audios"
         )
-    waveform, sample_rate = librosa.load(path_or_fp)
+    waveform, sample_rate = librosa.load(path_or_fp, sr=16000)
     """
     waveform, sample_rate = sf.read(
         path_or_fp, dtype="float32", always_2d=True, frames=frames, start=start
